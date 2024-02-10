@@ -18,18 +18,43 @@ from datetime import datetime
 class BaseModel:
     """
     This is the base model class
-    It is an base class from which all other classes would inherit from
+    It is an abstract class from which all other classes would inherit from
     """
 
-    id = None
-    created_at = None
-    updated_at = None
+    def __init__(self, *args, **kwargs):
+        """
+        Initialiazes new instance of BaseModel.
 
-    def __init__(self):
+        Args:
+            *args: Unused positional arguments
+            **kwargs: Dictionary representation of an instance.
 
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        If kwargs is not empty:
+            Each key has an attribute name
+            Each value is the value of the corresponding attr name
+            Convert datetime to datetime objects
+
+        Otherwise:
+            Create id and created_at values as initially done
+        """
+        if kwargs:
+            if '__class__' in kwargs:
+                # Remove '__class__' from the dictionary
+                del kwargs['__class__']
+            if 'created_at' in kwargs:
+                kwargs['created_at'] = datetime.strptime(
+                        kwargs['created_at'], '%Y-%m-%dT%H:%M:%S.%f')
+            if 'updated_at' in kwargs:
+                kwargs['updated_at'] = datetime.strptime(
+                        kwargs['updated_at'], '%Y-%m-%dT%H:%M:%S.%f')
+
+            for key, value in kwargs.items():
+                setattr(self, key, value)
+
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
 
     def __str__(self):
         """Returns a string representation of the object class"""
@@ -47,6 +72,7 @@ class BaseModel:
         """
         Returns a dictionary containing key/value of __dict__ for an instance
         """
+
         obj_dict = self.__dict__.copy()
 
         obj_dict['__class__'] = self.__class__.__name__
