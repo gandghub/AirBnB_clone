@@ -21,6 +21,10 @@ class BaseModel:
     It is an base class from which all other classes would inherit from
     """
 
+    id = None
+    created_at = None
+    updated_at = None
+
     def __init__(self):
 
         self.id = str(uuid.uuid4())
