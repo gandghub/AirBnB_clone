@@ -38,25 +38,20 @@ class BaseModel:
         Otherwise:
             Create id and created_at values as initially done
         """
-        if kwargs:
-            if '__class__' in kwargs:
-                # Remove '__class__' from the dictionary
-                del kwargs['__class__']
-            if 'created_at' in kwargs:
-                kwargs['created_at'] = datetime.strptime(
-                        kwargs['created_at'], '%Y-%m-%dT%H:%M:%S.%f')
-            if 'updated_at' in kwargs:
-                kwargs['updated_at'] = datetime.strptime(
-                        kwargs['updated_at'], '%Y-%m-%dT%H:%M:%S.%f')
-
+        if len(kwargs) > 0:
             for key, value in kwargs.items():
+                if key == '__class__':
+                    continue
+                if key == "created_at" or key == "updated_at":
+                    value = datetime.fromisoformat(value)
                 setattr(self, key, value)
+            return
 
-        else:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-            models.storage.new(self)
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
+
+        models.storage.new(self)
 
     def __str__(self):
         """Returns a string representation of the object class"""
