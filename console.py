@@ -13,11 +13,11 @@ from models.review import Review
 from models.engine.file_storage import FileStorage
 from datetime import datetime
 
-"""Module consule.py a cmd console"""
+"""Module consule.py a cmd console AirBnB clone"""
 
 
 class HBNBCommand(cmd.Cmd):
-    '''A command interpreter class'''
+    '''A command interpreter class for AirBnB clone'''
     prompt = "(hbnb)"
 
     All_class_dict = {
