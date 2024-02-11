@@ -13,13 +13,11 @@ from models.review import Review
 from models.engine.file_storage import FileStorage
 from datetime import datetime
 
-"""
-Module consule.py a cmd console
-"""
+"""Module consule.py a cmd console"""
 
 
 class HBNBCommand(cmd.Cmd):
-    ''' a command interpreter class '''
+    '''A command interpreter class'''
     prompt = "(hbnb)"
 
     All_class_dict = {
@@ -38,7 +36,7 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def do_quit(self, arg):
-        ''' Quit command to exit the program '''
+        '''Quit command to exit the program'''
         return True
 
     def do_nothing(self, arg):
@@ -128,8 +126,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, args):
         ''' Updates an instance based on the class name & id adding/updating
-            attribute (save the change into the JSON file). Ex: $ update
-            BaseModel 1234-1234-1234 email "aibnb@holbertonschool.com". '''
+            attribute (save the change into the JSON file). '''
 
         if not args:
             print("** class name missing **")
