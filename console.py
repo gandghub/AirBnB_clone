@@ -2,10 +2,15 @@
 """
 Console module for the command interpreter.
 """
-
 import cmd
 from models import storage
+from models.base_model import BaseModel
 from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
@@ -35,8 +40,8 @@ class HBNBCommand(cmd.Cmd):
             new_instance = eval(arg)()
             new_instance.save()
             print(new_instance.id)
-        except Exception as e:
-            print("**", e.__class__.__name__, str(e))
+        except NameError:
+            print("** class doesn't exist **")
 
     def do_show(self, arg):
         """Prints the string representation of an instance."""
@@ -44,13 +49,15 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
             return
-        if args[0] not in storage.classes:
+        class_name = args[0]
+        if class_name not in storage.classes:
             print("** class doesn't exist **")
             return
         if len(args) == 1:
             print("** instance id missing **")
             return
-        key = args[0] + "." + args[1]
+        instance_id = args[1]
+        key = "{}.{}".format(class_name, instance_id)
         objects = storage.all()
         if key in objects:
             print(objects[key])
@@ -63,13 +70,15 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
             return
-        if args[0] not in storage.classes:
+        class_name = args[0]
+        if class_name not in storage.classes:
             print("** class doesn't exist **")
             return
         if len(args) == 1:
             print("** instance id missing **")
             return
-        key = args[0] + "." + args[1]
+        instance_id = args[1]
+        key = "{}.{}".format(class_name, instance_id)
         objects = storage.all()
         if key in objects:
             del objects[key]
@@ -83,12 +92,11 @@ class HBNBCommand(cmd.Cmd):
         if not arg:
             print([str(obj) for obj in objects.values()])
             return
-        args = arg.split()
-        if args[0] not in storage.classes:
+        class_name = arg.split()[0]
+        if class_name not in storage.classes:
             print("** class doesn't exist **")
             return
-        print([str(obj) for key, obj in objects.items()
-               if args[0] == key.split('.')[0]])
+        print([str(obj) for key, obj in objects.items() if class_name in key])
 
     def do_update(self, arg):
         """Updates an instance based on the class name and id."""
@@ -96,13 +104,15 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
             return
-        if args[0] not in storage.classes:
+        class_name = args[0]
+        if class_name not in storage.classes:
             print("** class doesn't exist **")
             return
         if len(args) == 1:
             print("** instance id missing **")
             return
-        key = args[0] + "." + args[1]
+        instance_id = args[1]
+        key = "{}.{}".format(class_name, instance_id)
         objects = storage.all()
         if key not in objects:
             print("** no instance found **")
